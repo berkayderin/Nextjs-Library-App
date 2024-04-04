@@ -3,11 +3,19 @@
 import { Button, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap'
 
 import React from 'react'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 
 const AddPage = () => {
-	const handleSave = (data) => {
-		console.log(data)
+	const handleSave = async (data) => {
+		const { name, author, publisher, publishAt } = data
+		try {
+			const response = await axios.post('/api/book', { name, author, publisher, publishAt })
+			toast.success(response.message)
+		} catch (error) {
+			toast.error(response.message)
+		}
 	}
 
 	const {

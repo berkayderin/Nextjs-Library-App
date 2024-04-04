@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const conn = () => {
+const DbConnect = () => {
 	mongoose
 		.connect(process.env.NEXT_PUBLIC_MONGODB_URI, {
 			useNewUrlParser: true,
@@ -14,4 +14,4 @@ const conn = () => {
 		})
 }
 
-module.exports = conn
+module.exports = DbConnect

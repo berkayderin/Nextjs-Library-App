@@ -9,12 +9,15 @@ import { useForm } from 'react-hook-form'
 
 const AddPage = () => {
 	const handleSave = async (data) => {
-		const { name, author, publisher, publishAt } = data
+		const body = JSON.stringify(data)
 		try {
-			const response = await axios.post('/api/book', { name, author, publisher, publishAt })
-			toast.success(response.message)
+			const response = await axios.post('/api/book', body, {
+				headers: { 'Content-Type': 'application/json' }
+			})
+
+			toast.success(response.data.message)
 		} catch (error) {
-			toast.error(response.message)
+			toast.error(error.response.data.message || 'Bir hata oluştu.')
 		}
 	}
 

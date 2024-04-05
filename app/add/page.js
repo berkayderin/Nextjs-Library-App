@@ -43,7 +43,7 @@ const AddPage = () => {
 			</FormGroup>
 			<FormGroup>
 				<FormLabel>Yayın Yılı</FormLabel>
-				<FormControl type="number" placeholder="Yayın Yılı" {...register('publishAt', { required: true })} />
+				<FormControl type="date" placeholder="Yayın Yılı" {...register('publishAt', { required: true })} />
 			</FormGroup>
 			<FormGroup>
 				<Button variant="dark" onClick={handleSubmit(handleSave)}>

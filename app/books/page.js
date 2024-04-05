@@ -2,11 +2,17 @@
 
 import { useEffect, useState } from 'react'
 
+import { FaRegTrashAlt } from 'react-icons/fa'
+import { LiaEdit } from 'react-icons/lia'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
 const BooksPage = () => {
 	const [data, setData] = useState([])
+
+	const router = useRouter()
 
 	const fetchData = async () => {
 		try {
@@ -14,6 +20,17 @@ const BooksPage = () => {
 			setData(response.data.books)
 		} catch (error) {
 			console.error(response.data.message || 'Bir hata oluştu.')
+		}
+	}
+
+	const handleDelete = async (id) => {
+		try {
+			const response = await axios.delete(`/api/book/${id}`)
+			console.log(response.data.message)
+			toast.success(response.data.message)
+			fetchData()
+		} catch (error) {
+			toast.error(response.data.message)
 		}
 	}
 
@@ -43,7 +60,19 @@ const BooksPage = () => {
 						<td>{book.name}</td>
 						<td>{book.author}</td>
 						<td>{book.publisher}</td>
-						<td>{book.publishAt}</td>
+						<td>{book.publishedAt}</td>
+						<td>
+							<LiaEdit
+								className="text-warning mx-2"
+								style={{ cursor: 'pointer' }}
+								onClick={() => router.push(`/book/${book._id}`)}
+							/>
+							<FaRegTrashAlt
+								className="text-danger"
+								style={{ cursor: 'pointer' }}
+								onClick={() => handleDelete(book._id)}
+							/>
+						</td>
 					</tr>
 				))}
 			</tbody>

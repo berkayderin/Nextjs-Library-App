@@ -2,6 +2,7 @@ import Book from '@/models/Book'
 import DbConnect from '@/utils/db'
 import { NextResponse } from 'next/server'
 
+// kitap ekleme
 export async function POST(req, res) {
 	DbConnect()
 
@@ -17,10 +18,12 @@ export async function POST(req, res) {
 
 		return NextResponse.json({ message: 'Kitap başarıyla eklendi.', book })
 	} catch (error) {
+		console.error(error)
 		return NextResponse.json({ message: 'Kitap eklenirken bir hata oluştu.', status: 500 })
 	}
 }
 
+// tüm kitapları getirme
 export async function GET(req, res) {
 	DbConnect()
 

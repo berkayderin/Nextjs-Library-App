@@ -3,7 +3,6 @@
 import { Button, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 
-import Link from 'next/link'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
@@ -32,10 +31,9 @@ const EditBook = () => {
 			console.error(error.response?.data.message || 'Bir hata oluştu.')
 		}
 	}
-
 	const onSubmit = async (data) => {
 		try {
-			const response = await axios.put(`/api/book/${params.id}`, data, {
+			const response = await axios.put(`/api/book/${params.id}`, JSON.stringify(data), {
 				headers: {
 					'Content-Type': 'application/json'
 				}
@@ -78,11 +76,10 @@ const EditBook = () => {
 						/>
 						{errors.publishAt && <p className="text-danger">Yayın tarihi zorunludur.</p>}
 					</FormGroup>
-					<Link href="/books">
-						<Button variant="dark" type="submit">
-							Kitabı Güncelle
-						</Button>
-					</Link>
+
+					<Button variant="dark" type="submit">
+						Kitabı Güncelle
+					</Button>
 				</form>
 			</div>
 		</Row>

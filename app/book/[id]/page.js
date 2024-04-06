@@ -3,6 +3,7 @@
 import { Button, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 
+import Link from 'next/link'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
@@ -11,31 +12,48 @@ import { useParams } from 'next/navigation'
 const EditBook = () => {
 	const params = useParams()
 	const [book, setBook] = useState({})
-
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors }
+	} = useForm()
 	const fetchBookDetail = async () => {
 		try {
 			const response = await axios.get(`/api/book/${params.id}`)
 			console.log(response.data.book)
 			setBook(response.data.book)
+			if (response.data.book.publishAt) {
+				// Yayın tarihi alındıktan sonra formatı düzeltip setValue ile ayarla
+				const formattedDate = response.data.book.publishAt.split('T')[0]
+				setValue('publishAt', formattedDate)
+			}
 		} catch (error) {
-			console.error(response.data.message || 'Bir hata oluştu.')
+			console.error(error.response?.data.message || 'Bir hata oluştu.')
 		}
 	}
 
-	const {
-		register,
-		handleSubmit,
-		watch,
-		formState: { errors }
-	} = useForm()
+	const onSubmit = async (data) => {
+		try {
+			const response = await axios.put(`/api/book/${params.id}`, data, {
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+			toast.success(response.data.message)
+		} catch (error) {
+			toast.error(error.response?.data.message || 'Güncelleme sırasında bir hata oluştu.')
+		}
+	}
 
 	useEffect(() => {
 		fetchBookDetail()
 	}, [])
+
 	return (
 		<Row className="justify-content-center gap-3 mt-5">
 			<div className="col-md-6">
-				<form>
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<FormGroup>
 						<FormLabel>Kitap Adı</FormLabel>
 						<FormControl type="text" defaultValue={book.name} {...register('name', { required: true })} />
@@ -53,10 +71,18 @@ const EditBook = () => {
 					</FormGroup>
 					<FormGroup>
 						<FormLabel>Yayın Tarihi</FormLabel>
-						<FormControl type="date" defaultValue={book.publishAt} {...register('publishAt', { required: true })} />
+						<FormControl
+							type="date"
+							defaultValue={book.publishAt ? book.publishAt.split('T')[0] : ''}
+							{...register('publishAt', { required: true })}
+						/>
 						{errors.publishAt && <p className="text-danger">Yayın tarihi zorunludur.</p>}
 					</FormGroup>
-					<Button type="submit">Kitabı Güncelle</Button>
+					<Link href="/books">
+						<Button variant="dark" type="submit">
+							Kitabı Güncelle
+						</Button>
+					</Link>
 				</form>
 			</div>
 		</Row>

@@ -19,6 +19,7 @@ export async function DELETE(req, { params }) {
 
 // kitap güncelleme
 export async function PUT(req, { params, body }) {
+	console.log('Request body:', body)
 	DbConnect()
 
 	const { id } = params

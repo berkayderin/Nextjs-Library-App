@@ -60,7 +60,7 @@ const BooksPage = () => {
 						<td>{book.name}</td>
 						<td>{book.author}</td>
 						<td>{book.publisher}</td>
-						<td>{book.publishedAt}</td>
+						<td>{book.publishAt ? new Date(book.publishAt).toLocaleDateString('tr-TR') : 'Bilgi Yok'}</td>
 						<td>
 							<LiaEdit
 								className="text-warning mx-2"
